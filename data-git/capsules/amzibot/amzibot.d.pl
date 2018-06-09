@@ -59,24 +59,12 @@ is_contained_in(T1,T2,Z) :-
 %% ACTIONS
 
 poss(goto(R1,R2),Z) :-
-	holds(here(R1),Z),
-	nonvar(R1),
-	holds(opened(R1,R2),Z),
-	nonvar(R2),
-	isConnected(R1,R2),
-	nonvar(R2).
-	%% translateAndPrint(r1,[item(R1)]),
-	%% translateAndPrint(r2,[item(R2)]),
-	%% findall(opened(X,Y),(holds(opened(X,Y),Z),nonvar(X),nonvar(Y)),All),
-	%% translateAndPrint(all,All),
-
-	%% translateAndPrint(z,Z),
-	%% writeln([ha]).
+	knows_val([R1],here(R1),Z),
+	knows_val([R1],opened(R1,R2),Z),
+	isConnected(R1,R2).
 
 poss(take(Thing),Z) :-
-	holds(here(Place),Z),
-	nonvar(Place),
-	%% holds(location(Thing,Place),Z),
+	knows_val([Place],here(Place),Z),
 	is_contained_in(Thing,Place,Z),
 	nonvar(Thing).
 	
