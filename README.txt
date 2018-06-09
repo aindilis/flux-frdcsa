@@ -1,6 +1,6 @@
 mkdir -p /var/lib/myfrdcsa/sandbox/eclipse-basic-20160110/eclipse-basic-20160110
 
-unzip eclipse-basic.tgz and eclipse-doc.tgz into this folder, then go back to whereever you unpacked flux-frdcsa and run
+unzip eclipse_basic.tgz and eclipse_doc.tgz into this folder, then go back to whereever you unpacked flux-frdcsa and run
 
 ./flux-frdcsa amzibot/amzibot
 
