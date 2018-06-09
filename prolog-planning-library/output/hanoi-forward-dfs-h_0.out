@@ -1,0 +1,3 @@
+hanoi3 0.037 984 20312 7 (move d1 d2 peg3) (move d2 d3 peg2) (move d1 peg3 d2) (move d3 peg1 peg3) (move d1 d2 peg1) (move d2 peg2 d3) (move d1 peg1 d2)
+hanoi3 0.034 984 20312 7 (move d1 d2 peg3) (move d2 d3 peg2) (move d1 peg3 d2) (move d3 peg1 peg3) (move d1 d2 peg1) (move d2 peg2 d3) (move d1 peg1 d2)
+hanoi3 0.057 984 20312 7 (move d1 d2 peg3) (move d2 d3 peg2) (move d1 peg3 d2) (move d3 peg1 peg3) (move d1 d2 peg1) (move d2 peg2 d3) (move d1 peg1 d2)

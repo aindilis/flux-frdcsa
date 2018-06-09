@@ -1,0 +1,93 @@
+constraints not_holds/2, not_holds_all/2, duplicate_free/1,
+            or_holds/2, or_holds/3, cancel/2, cancelled/2.
+
+option(check_guard_bindings,off).
+
+not_holds(F, [F1|Z]) <=> neq(F, F1), not_holds(F, Z).
+not_holds(_, [])     <=> true.
+
+not_holds_all(F, [F1|Z]) <=> neq_all(F, F1), not_holds_all(F, Z).
+not_holds_all(_, [])     <=> true.
+
+not_holds_all(F, Z) \ not_holds(G, Z)     <=> inst(G, F) | true.
+not_holds_all(F, Z) \ not_holds_all(G, Z) <=> inst(G, F) | true.
+
+duplicate_free([F|Z]) <=> not_holds(F,Z), duplicate_free(Z).
+duplicate_free([])    <=> true.
+
+or_holds([F],Z) <=> F\=eq(_,_) | holds(F,Z).
+
+or_holds(V,Z) <=> \+ ( member(F,V),F\=eq(_,_) ) | or_and_eq(V,D), call(D).
+
+or_holds(V,[]) <=> member(F, V, W), F\=eq(_,_) | or_holds(W, []).
+
+or_holds(V,Z) <=> member(eq(X,Y),V), or_neq(exists,X,Y,D), \+ call(D) | true.
+or_holds(V,Z) <=> member(eq(X,Y),V,W), \+ (and_eq(X,Y,D), call(D))
+                                                             | or_holds(W,Z).
+
+not_holds(F, Z) \ or_holds(V, Z) <=> member(G, V, W), F==G | or_holds(W, Z).
+
+not_holds_all(F, Z) \ or_holds(V, Z) <=> member(G, V, W), inst(G, F)
+                                         | or_holds(W, Z).
+
+or_holds(V, [F|Z]) <=> or_holds(V, [], [F|Z]).
+
+or_holds([G|V],W,[F|Z]) <=> G==F -> true ;
+                            G\=F -> or_holds(V,[G|W],[F|Z]) ;
+                            G=..[_|ArgX], F=..[_|ArgY],
+                            or_holds(V,[eq(ArgX,ArgY),G|W],[F|Z]).
+
+or_holds([],W,[_|Z]) <=> or_holds(W,Z).
+
+cancel(F,Z) \ not_holds(G, Z)     <=> \+ F\=G | true.
+
+cancel(F,Z) \ not_holds_all(G, Z) <=> \+ F\=G | true.
+
+cancel(F,Z) \ or_holds(V,Z)       <=> member(G,V), \+ F\=G | true.
+
+cancel(F,Z), cancelled(F,Z) <=> true.
+
+%%%
+%%% auxiliary clauses
+%%%
+
+:- lib(fd).
+
+neq(F, F1)     :- or_neq(exists, F, F1).
+neq_all(F, F1) :- or_neq(forall, F, F1).
+
+or_neq(Q, Fx, Fy) :-
+  functor(Fx, F, M), functor(Fy, G, N),
+  ( F=G, M=N -> Fx =.. [_|ArgX], Fy =.. [_|ArgY], or_neq(Q, ArgX, ArgY, D), call(D)
+              ; true ).
+
+or_neq(_, [], [], (0#\=0)).
+or_neq(Q, [X|X1], [Y|Y1], D) :-
+  or_neq(Q, X1, Y1, D1),
+  ( Q=forall, var(X), \+ is_domain(X) -> ( binding(X,X1,Y1,YE) -> D=((Y#\=YE)#\/D1) ; D=D1 )
+                                       ; D=((X#\=Y)#\/D1) ).
+
+binding(X,[X1|ArgX],[Y1|ArgY],Y) :-
+   X==X1 -> Y=Y1 ; binding(X,ArgX,ArgY,Y).
+
+and_eq([], [], (0#=0)).
+and_eq([X|X1], [Y|Y1], D) :-
+   and_eq(X1, Y1, D1),
+   D = ((X#=Y)#/\D1).
+
+or_and_eq([], (0#\=0)).
+or_and_eq([eq(X,Y)|Eq], (D1#\/D2)) :-
+   and_eq(X,Y,D1),
+   or_and_eq(Eq,D2).
+
+inst(G,F) :-
+   \+ ( term_variables(G,X), term_variables(F,Y), bound_free(Y,X,V,W),
+        copy_term_vars(W,F,F1), \+ no_global_bindings(G=F1, V) ).
+
+bound_free([],X,X,[]).
+bound_free([Y|Ys],X,V,W) :-
+   bound_free(Ys,X,V1,W1), (is_domain(Y) -> V=[Y|V1], W=W1
+                                          ; V=V1, W=[Y|W1]).
+
+member(X, [X|T], T).
+member(X, [H|T], [H|T1]) :- member(X, T, T1).

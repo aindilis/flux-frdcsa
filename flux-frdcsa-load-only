@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# FIXME:
+
+# what we are going to do is to get this to work for the most basic
+# piece, i.e. moving from one room to another.  using the search
+# algorithm.  Then we'll make it more and more complete until it can
+# solve the whole nanisearch game.  Then we'll expand things,
+# including with sensor integration and response.
+
+echo "['data-git/capsules/amzibot/amzibot.d.pl']."
+echo "['data-git/capsules/amzibot/amzibot.p.pl']."
+
+./eclipse -f flux_frdcsa.pl

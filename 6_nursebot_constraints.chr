@@ -1,0 +1,6 @@
+constraints room_occupied/1.
+
+room_occupied([F|Z]) <=>
+   F=in_room(_,R) -> holds(occupied(R), Z,Z1), room_occupied(Z1) ;
+   F=occupied(R)  -> holds(in_room(_,R),Z,Z1), room_occupied(Z1) ;
+   room_occupied(Z).
