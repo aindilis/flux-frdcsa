@@ -45,7 +45,7 @@ room_occupied(A) :-
 'CHRroom_occupied_1'(room_occupied(A), B, C, D) :-
 	'CHRroom_occupied_1__1'(room_occupied(A), B, C, D).
 :- set_flag('CHRroom_occupied_1' / 4, leash, notrace).
-:- current_macro('CHRroom_occupied_1' / 4, _324851, _324852, _324853) -> true ; define_macro('CHRroom_occupied_1' / 4, tr_chr / 2, [write]).
+:- current_macro('CHRroom_occupied_1' / 4, _855182, _855183, _855184) -> true ; define_macro('CHRroom_occupied_1' / 4, tr_chr / 2, [write]).
 'CHRroom_occupied_1__1'(A, B, C, D) :-
 	'CHRroom_occupied_1__2'(A, B, C, D).
 :- set_flag('CHRroom_occupied_1__1' / 4, leash, notrace).
